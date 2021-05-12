@@ -1,4 +1,3 @@
-# API_insightface
 HTTP service for face verification and recognition based on insightface deep models and [iFace](https://documenter.getpostman.com/view/1169404/TVK8ZJzz) API-calls convention
 
 *Build for CPU inference*
