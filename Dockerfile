@@ -15,4 +15,4 @@ rm antelope.zip
 
 EXPOSE 5000
 
-CMD ["python", "./httpsrv.py"]
+ENTRYPOINT ["python", "./httpsrv.py"]
