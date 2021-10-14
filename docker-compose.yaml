@@ -7,13 +7,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_CUDA
+    volumes:
+      - ./httpsrv.py:/usr/src/app/httpsrv.py:ro
     ports:
-      - 5000:5000
+      - 8000:5000
     restart: always
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: 2
               capabilities: [gpu]
