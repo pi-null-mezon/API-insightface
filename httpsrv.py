@@ -175,7 +175,7 @@ def identify_face():
     if file.filename == '':
         return flask.jsonify({"status": "Error", "info": "Empty filename parameter"}), 400
     if file and allowed_file(file.filename):
-        img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
         faces = fa.get(img)
         if len(faces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
@@ -207,7 +207,7 @@ def recognize_face():
     if file.filename == '':
         return flask.jsonify({"status": "Error", "info": "Empty filename parameter"}), 400
     if file and allowed_file(file.filename):
-        img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
         faces = fa.get(img)
         if len(faces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
@@ -259,7 +259,7 @@ def verify_face():
         return flask.jsonify({"status": "Error", "info": "Empty vfile name parameter"}), 400
     if efile and allowed_file(efile.filename) and vfile and allowed_file(vfile.filename):
 
-        img = cv2.imdecode(np.frombuffer(efile.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.imdecode(np.frombuffer(efile.read(), np.uint8), cv2.IMREAD_COLOR)
         efaces = fa.get(img)
         if len(efaces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
@@ -267,7 +267,7 @@ def verify_face():
             return flask.jsonify({"status": "Error", "code": 3, "message": "Many faces"}), 400
         et = efaces[0].normed_embedding
 
-        img = cv2.imdecode(np.frombuffer(vfile.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.imdecode(np.frombuffer(vfile.read(), np.uint8), cv2.IMREAD_COLOR)
         vfaces = fa.get(img)
         if len(vfaces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
