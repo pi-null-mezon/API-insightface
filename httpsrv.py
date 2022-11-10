@@ -80,7 +80,7 @@ def randomize_name(filename):
 
 @app.route("%s/status" % api_prefix, methods=['GET'])
 def get_status():
-    return flask.jsonify({'status': 'Success', 'version': '2.0.0.0', 'datastorage': app.config['UPLOAD_FOLDER']}), 200
+    return flask.jsonify({'status': 'Success', 'version': '2.0.0.1'}), 200
 
 
 @app.route("%s/photo" % api_prefix, methods=['GET'])
@@ -176,6 +176,8 @@ def identify_face():
         return flask.jsonify({"status": "Error", "info": "Empty filename parameter"}), 400
     if file and allowed_file(file.filename):
         img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+        if img is None:
+            return flask.jsonify({"status": "Error", "code": 4, "message": "Can not decode photo"}), 400    
         faces = fa.get(img)
         if len(faces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
@@ -208,6 +210,8 @@ def recognize_face():
         return flask.jsonify({"status": "Error", "info": "Empty filename parameter"}), 400
     if file and allowed_file(file.filename):
         img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+        if img is None:
+            return flask.jsonify({"status": "Error", "code": 4, "message": "Can not decode photo"}), 400
         faces = fa.get(img)
         if len(faces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
@@ -258,8 +262,9 @@ def verify_face():
     if vfile.filename == '':
         return flask.jsonify({"status": "Error", "info": "Empty vfile name parameter"}), 400
     if efile and allowed_file(efile.filename) and vfile and allowed_file(vfile.filename):
-
         img = cv2.imdecode(np.frombuffer(efile.read(), np.uint8), cv2.IMREAD_COLOR)
+        if img is None:
+            return flask.jsonify({"status": "Error", "code": 4, "message": "Can not decode photo"}), 400
         efaces = fa.get(img)
         if len(efaces) == 0:
             return flask.jsonify({"status": "Error", "code": 2, "message": "No faces"}), 400
@@ -302,7 +307,7 @@ def drop_whitelist():
 
 if __name__ == "__main__":
     fa = FaceAnalysis(name='antelope', root='~/.insightface/models')
-    fa.prepare(ctx_id=args.ctx, det_size=(640, 640))
+    fa.prepare(ctx_id=args.ctx)
     app_addr = os.getenv('APP_ADDR', '0.0.0.0')
     ap_port = int(os.getenv('APP_PORT', 5000))
     print("---------------------------------------")
